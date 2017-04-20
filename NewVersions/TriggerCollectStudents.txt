@@ -1,0 +1,51 @@
+USE [CAMS_Enterprise]
+GO
+/****** Object:  Trigger [dbo].[CollectStudents]    Script Date: 02/24/2017 12:26:52 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+ALTER TRIGGER [dbo].[CollectStudents] ON [dbo].[Student] 
+  FOR UPDATE
+AS 
+BEGIN
+  -- SET NOCOUNT ON added to prevent extra result sets from
+  -- interfering with SELECT statements.
+  SET NOCOUNT ON;
+  DECLARE @nc int;
+  DECLARE @nc1 int;
+  DECLARE @EmAddr varchar(100);
+  DECLARE @tit varchar(200)
+  
+  --select @nc=OwnerUID from inserted where OwnerUID=15171
+  
+  --select @nc=studentuid from deleted 
+  --select @nc1=typeid from Student
+  --where StudentUID=@nc
+  
+--  if (@nc1=3)
+--	begin
+--	  insert into dbo.collectAcceptedStudents
+--	  select * from Student where StudentUID=@nc
+--	end
+  
+  --if (@nc) is not null 
+  --begin
+    --set @EmAddr=dbo.getStudentEmailAddress(@nc)
+	--set @tit= 'A change has been posted in your account'
+	--if @EmAddr is not null or @EmAddr <>''
+
+		EXEC msdb.dbo.sp_send_dbmail 
+		@profile_name='TROCMAIL',
+		@recipients = 'etiennes@trocaire.edu', 
+		@subject ='accepted list',
+		@query='select * from deleted',
+		@body = 'There has been a changed posted to your account' ; 
+ --end	
+  -- end
+
+  
+  -- get the last id value of the record inserted or updated
+  -- Send an email
+
+END

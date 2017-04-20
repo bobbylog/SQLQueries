@@ -1,0 +1,1 @@
+exec dbo.TCC_getStudentTranscriptDataForAdvisement 'A0000013687'
