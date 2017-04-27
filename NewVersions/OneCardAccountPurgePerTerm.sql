@@ -1,11 +1,12 @@
 /********************************************************************/
-/*  This is the one to use.  Last used 1/5/2013 to delete students  */
-/*  with last term equal SU-11, FA-11, FA-BSN-11.                   */
+/*  This is the one to use.  Last used 4/26/17 to delete students  */
+/*  with last term equalSU-12', 'FA-12', 'FA-BSN-12', 'SP-12','SP-13',*/
+/*'SU-13','FA-13','SP-14','SU-14','FA-14', 'FA-BSN-13', 'FA-BSN-14', 'SP-15'*/
 /********************************************************************/
 
 SELECT AC.ACCOUNT, AC.CUSTOM, AC.FNAME, AC.LNAME, AC.P_TITLE, ST.StudentUID
 INTO #RW
-FROM OneCard.onecard.ACCOUNTS AC
+FROM OneCard.onecard2.ACCOUNTS AC
 LEFT OUTER JOIN CAMS_Enterprise.dbo.Student ST
       ON (AC.CUSTOM COLLATE SQL_Latin1_General_CP1_CI_AI = ST.StudentID)
       
@@ -38,7 +39,7 @@ FROM #RW R1
 SELECT *
 INTO #Delete
 FROM #Final   
-WHERE DisplayTerm IN ('SU-11', 'FA-11', 'FA-BSN-11')
+WHERE DisplayTerm IN ('SU-12', 'FA-12', 'FA-BSN-12', 'SP-12','SP-13','SU-13','FA-13','SP-14','SU-14','FA-14', 'FA-BSN-13', 'FA-BSN-14', 'SP-15')
 ORDER BY LastTerm, LNAME, FNAME
 
 
@@ -46,18 +47,21 @@ ORDER BY LastTerm, LNAME, FNAME
 ORDER BY LastTerm, LNAME, FNAME
 */
 
+/*
 SELECT *
-FROM OneCard.onecard.ACCOUNTS
-WHERE CUSTOM IN (SELECT CUSTOM FROM #Delete)
-
-
-/*SELECT *
-INTO OneCard.dbo.DELETES010713
-FROM OneCard.onecard.ACCOUNTS
+FROM OneCard.onecard2.ACCOUNTS
 WHERE CUSTOM IN (SELECT CUSTOM FROM #Delete)
 */
+
 /*
-DELETE FROM OneCard.onecard.ACCOUNTS
+SELECT *
+INTO OneCard.dbo.DELETES042617
+FROM OneCard.onecard2.ACCOUNTS
+WHERE CUSTOM IN (SELECT CUSTOM FROM #Delete)
+*/
+
+/*
+DELETE FROM OneCard.onecard2.ACCOUNTS
 WHERE CUSTOM IN (SELECT CUSTOM FROM #Delete)
 */
       

@@ -1,22 +1,21 @@
+--drop table #tmpresp
+
+
 select * 
 into #tmpResp
 from dbo.CrsEvalResponse
 where 
 MONTH(datesubmitted)=4
-and DAY(datesubmitted)=17
+and DAY(datesubmitted)=19
 and YEAR(datesubmitted)=2017
-and OwnerUID=627
-and SROfferid=100479
+and OwnerUID=110010
+--and SROfferid=100479
 order by EvalRespID desc
 
 
---select distinct * from SRAcademic
---where CourseName like 'health assessment%'
---and TermCalendarID=614
 
 
-
---select Evalrespid from #tmpresp
+select * from #tmpresp
 
 
 
@@ -24,10 +23,10 @@ order by EvalRespID desc
 delete from dbo.CrsEvalResponse
 where 
 MONTH(datesubmitted)=4
-and DAY(datesubmitted)=17
+and DAY(datesubmitted)=19
 and YEAR(datesubmitted)=2017
-and OwnerUID=627
+and OwnerUID=110010
 and EvalRespID in (select Evalrespid from #tmpresp)
 
 
---drop table #tmpresp
+drop table #tmpresp
