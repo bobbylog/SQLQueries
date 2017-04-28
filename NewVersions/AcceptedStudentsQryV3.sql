@@ -1,4 +1,4 @@
-select A.StudentID, A.LastName, A.firstname, A.Expectedtermid, A.ProspectStatus,
+select A.StudentID, A.LastName, A.firstname, A.Expectedtermid, A.ProspectStatus,A.AdmitDate,
 dbo.isstudentenrolled(a.studentuid, a.ExpectedTermID) as Enrolled,
 dbo.isstudentregisteredFormTerm(a.studentuid, a.ExpectedTermID) as Registered, B.MajorDegree
 into #TmpAccepted
