@@ -15,7 +15,7 @@ Use CAMS_enterprise
  
  set @tnc=0
  set @nt=0
- set @Tm=614
+ set @Tm=615
  
  set @rfld='SU17\Raw\'
  set @pfld='SU17\Processed\'
@@ -71,6 +71,16 @@ if (@tnc=0) and (@nc1 >0)
 		--select * from #TmpRet
 
 		DECLARE @nc int
+		DECLARE @rc int
+		DECLARE @rc1 int
+		
+		DECLARE @Topic varchar(300)
+		DECLARE @Tbody varchar(500)
+		
+		
+		set @Tbody=''
+		set @rc=0
+		set @rc1=0
 
 		select @nc=COUNT(Field4) from #TmpRet 
 
@@ -126,6 +136,9 @@ if (@tnc=0) and (@nc1 >0)
 														0,
 														'TCCAMSMGR', 
 														GETDATE(),0,0,0,0,0,'','' )
+														
+														set @rc1=@@ROWCOUNT
+														set @rc=@rc+@rc1
 
 												   FETCH NEXT FROM db_cursor INTO @name4, @name6, @name7, @name8
 											END   
@@ -137,6 +150,15 @@ if (@tnc=0) and (@nc1 >0)
 											EXEC  master..xp_cmdshell @cmd2
 											EXEC  master..xp_cmdshell 'echo Field1,Field2,Field3,Field4,Field5,Field6,Field7,Field8,Field9 > d:\sftp\barnes_noble\imports\TransactionsProcessed.csv'
 						
+											set @Topic='Batch '+'BN-ONLINE-'+cast(MONTH(GETDATE()) as varchar)+'-'+cast(DAY(GETDATE()) as varchar)+'-'+cast(YEAR(GETDATE()) as varchar)+' has been Uploaded with '+cast(@rc as varchar)+' transactions'
+											set @Tbody='Batch '+'BN-ONLINE-'+cast(MONTH(GETDATE()) as varchar)+'-'+cast(DAY(GETDATE()) as varchar)+'-'+cast(YEAR(GETDATE()) as varchar)+' has been Uploaded with '+cast(@rc as varchar)+' transactions. Please, check out Billing batch in CAMS.'
+											-- Send an email
+											EXEC msdb.dbo.sp_send_dbmail 
+											@profile_name='TROCMAIL',
+											@recipients = 'desbordesd@trocaire.edu;etiennes@trocaire.edu', 
+											-- @query = 'SELECT * FROM CAMS_ENTERPRISE.dbo.tmpStudentStatHistory WHERE DAY(SDATE)=DAY(GETDATE()) AND MONTH(SDATE)=MONTH(GETDATE()) AND YEAR(SDATE)=YEAR(GETDATE())',
+											@subject = @topic ,
+											@body = @tbody ;  
 						
 											drop table #TmpRet1
 											drop table #TmpRet
