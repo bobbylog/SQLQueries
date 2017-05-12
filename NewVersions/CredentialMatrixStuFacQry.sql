@@ -1,5 +1,5 @@
 select StudentUID, StudentID, LastName, FirstName, typeid, AdmitDate from Student where 
-LastName like 'quin%'
+LastName like 'andzel%'
 --and 
 --StudentID='A0000015526'
 
@@ -10,6 +10,6 @@ select FacultyID, LastName, FirstName from faculty where lastname like 'donahue%
 select FacultyID, PortalAlias, PortalPassword, PortalAccess from FacultyPortal where FacultyID=110091
 
 select StudentUID, PortalPassword, LastName, FirstName, PortalHandle, PortalEnable, PortalPIN, PINValidateDT from CAMS_Student_Portal_Who_View
-where StudentUID=49067
+where StudentUID=114416
 
 --select * from Student where LastName='shannon'
