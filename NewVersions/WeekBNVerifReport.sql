@@ -32,13 +32,13 @@ select  *
 into #TransacFilesV3
 from #tmpDirectory1
 where isfile=1
-and subdirectory like '%V3.csv' 
+and subdirectory like 'AR%V3.csv' 
 and subdirectory not like '%process%'
 order by subdirectory asc
 
 
 
-select * from #TransacFilesV3
+--select * from #TransacFilesV3
 
 
 
@@ -137,7 +137,7 @@ order by studentid
 select * , 
 [dbo].[getVerifiedStuBatchAmount] (
  dbo.getStudentUIDFromID(StudentID),
- 3,
+ --3,
  TransType,
  TransDate,
  Amount2
@@ -158,23 +158,61 @@ from #Tmptab4
 --into #withSumTab
 --from #Tmptab6
 
+drop table dbo.NoSumTabForVerif
+select * , case when CAMSBatchAmt IS not null then 'Yes' else 'No' end as Hit
+into dbo.NoSumTabForVerif
+from #NoSumTab 
+--where CAMSBatchAmt  is not null 
+order by transdate, Custname asc
 
-select * from #NoSumTab where CAMSBatchAmt  is not null order by transdate, Custname asc
+--select * from #NoSumTab where CAMSBatchAmt  is null order by transdate, Custname asc
 
-select * from #NoSumTab where CAMSBatchAmt  is null order by transdate, Custname asc
+DECLARE @cmdstr varchar(350)
+DECLARE @tmstp varchar(50)
+DECLARE @globalcmdstr varchar(500)
+DECLARE @filename1 varchar(100)
+DECLARE @cterm varchar(25)
+
+set @cterm='SU-17'
+set @cmdstr= 'SQLCMD -S trocaire-sql01 -E  -s, -W -Q "SET ANSI_WARNINGS OFF; set nocount on; SELECT * FROM CAMS_ENTERPRISE.dbo.NoSumTabForVerif"  > D:\CAMSEnterprise\Bookstore\BNAVerifSU17'
+--print  @cmdstr
+set @tmstp=LEFT(CONVERT(VARCHAR, GETDATE(), 120), 10)
+set @globalcmdstr = @cmdstr+'_'+@tmstp+'.csv'
+set @filename1='D:\CAMSEnterprise\Bookstore\BNAVerifSU17_'+@tmstp+'.csv'
+print @globalcmdstr
+EXEC  master..xp_cmdshell @globalcmdstr
+
+				
+declare @glfile varchar(max)
+declare @topic varchar(300)
+declare @tbody varchar(300)
+set @topic='Barnes and Nobles Weekly Verification File for '+@cterm+ ' as of '+LEFT(CONVERT(VARCHAR, GETDATE(), 120), 10)
+set @glfile=@filename1
+set @tbody= 'Dear Damian, '+CHAR(13)+CHAR(13)+CHAR(10)+'Please, find Attached the Barnes and Nobles Weekly Verification File for '+@cterm+ ' as of '+LEFT(CONVERT(VARCHAR, GETDATE(), 120), 10)+
+        CHAR(13)+CHAR(13)+CHAR(10)+'Regards, '+CHAR(13)+CHAR(13)+CHAR(10)+'Senghor E '
 
 
 
+-- Send an email
+EXEC msdb.dbo.sp_send_dbmail 
+@profile_name='TROCMAIL',
+@recipients = 'desbordesd@trocaire.edu;etiennes@trocaire.edu', 
+@file_attachments =@glfile,
+-- @query = 'SELECT * FROM CAMS_ENTERPRISE.dbo.tmpStudentStatHistory WHERE DAY(SDATE)=DAY(GETDATE()) AND MONTH(SDATE)=MONTH(GETDATE()) AND YEAR(SDATE)=YEAR(GETDATE())',
+@subject = @topic ,
+@body = @tbody ;  
+
+EXEC  master..xp_cmdshell 'del D:\CAMSEnterprise\Bookstore\BNAVerif*.csv'
 
 drop table #NoSumTab
-drop table #withSumTab
-drop table #tmptab6
-drop table #TmpTab5
+--drop table #withSumTab
+--drop table #tmptab6
+--drop table #TmpTab5
 drop table #TmpTab4
-drop table #TmpTab3
+--drop table #TmpTab3
 drop table #tmptab
 drop table #Tmptab1
-drop table #Transv2			
+--drop table #Transv2			
 drop table #Transv3
 drop table #tmpDirectory1
 drop table #TransacFilesV3
