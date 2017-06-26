@@ -1,4 +1,4 @@
 USE CAMS_Enterprise
-GRANT EXECUTE ON OBJECT::TCC_Registered_Student_For_Billing
+GRANT EXECUTE ON OBJECT::TCC_get_StudentEmailFromClass
     TO dats5;  
 GO  

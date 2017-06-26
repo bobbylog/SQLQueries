@@ -1,6 +1,7 @@
 --EXEC [dbo].[TCC_getAlphaThetaKappaStudents] 'sp-17','109','616','1.0','9.0'
 --EXEC [dbo].[TCC_getAlphaThetaKappaStudents] 'sp-17','152','616','1.0','9.0'
-
+	
+--drop table #PhiThetaList
 declare @name1 int
 declare @Cpass int
 declare @name2 varchar (200)
@@ -47,9 +48,11 @@ set @Cpass=1
 				 
 			DEALLOCATE db_cursor1
 
-	
+	-- put back 124 rad tech later
+
 	select * from  #PhiThetaList
 	where StudentMajor not in (152,136, 135, 155)
+	and honorsid2 <>2444
 	
 	drop table #PhiThetaList
 	
