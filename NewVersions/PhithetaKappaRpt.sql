@@ -53,6 +53,7 @@ set @Cpass=1
 	select * from  #PhiThetaList
 	where StudentMajor not in (152,136, 135, 155)
 	and honorsid2 <>2444
+	and ExpectedTermID <> dbo.getTermID(dbo.getcurrentTerm())
 	
 	drop table #PhiThetaList
 	
