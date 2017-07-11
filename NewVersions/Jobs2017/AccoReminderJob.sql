@@ -1,11 +1,11 @@
 USE [msdb]
 GO
 
-/****** Object:  Job [AccoReminderJob]    Script Date: 07/06/2017 17:28:40 ******/
+/****** Object:  Job [AccoReminderJob]    Script Date: 07/11/2017 16:04:02 ******/
 BEGIN TRANSACTION
 DECLARE @ReturnCode INT
 SELECT @ReturnCode = 0
-/****** Object:  JobCategory [[Uncategorized (Local)]]]    Script Date: 07/06/2017 17:28:40 ******/
+/****** Object:  JobCategory [[Uncategorized (Local)]]]    Script Date: 07/11/2017 16:04:02 ******/
 IF NOT EXISTS (SELECT name FROM msdb.dbo.syscategories WHERE name=N'[Uncategorized (Local)]' AND category_class=1)
 BEGIN
 EXEC @ReturnCode = msdb.dbo.sp_add_category @class=N'JOB', @type=N'LOCAL', @name=N'[Uncategorized (Local)]'
@@ -26,7 +26,7 @@ EXEC @ReturnCode =  msdb.dbo.sp_add_job @job_name=N'AccoReminderJob',
 		@owner_login_name=N'TROCAIRE\etiennes', 
 		@notify_email_operator_name=N'System Admin', @job_id = @jobId OUTPUT
 IF (@@ERROR <> 0 OR @ReturnCode <> 0) GOTO QuitWithRollback
-/****** Object:  Step [Processing]    Script Date: 07/06/2017 17:28:40 ******/
+/****** Object:  Step [Processing]    Script Date: 07/11/2017 16:04:02 ******/
 EXEC @ReturnCode = msdb.dbo.sp_add_jobstep @job_id=@jobId, @step_name=N'Processing', 
 		@step_id=1, 
 		@cmdexec_success_code=0, 
@@ -49,8 +49,11 @@ DECLARE @name2 varchar(200)
 
 
 DECLARE db_cursor CURSOR FOR  
-				select top 4 FormID, EmailAddress from CTM_AccomodationReq
-				where TestDate=DATEADD(day,2,getdate())
+				select FormID, EmailAddress from CTM_AccomodationReq
+				where
+          				       Month(TestDate)=month(DATEADD(day,2,getdate()))
+				                 and  Day(TestDate)=Day(DATEADD(day,2,getdate()))
+				                 and Year(TestDate)=year(DATEADD(day,2,getdate()))
 				
 				OPEN db_cursor   
 				FETCH NEXT FROM db_cursor INTO @name1, @name2

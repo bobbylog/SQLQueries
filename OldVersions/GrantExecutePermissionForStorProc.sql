@@ -1,4 +1,4 @@
 USE CAMS_Enterprise
-GRANT EXECUTE ON OBJECT::TCC_Registered_Student_For_BillingWithCourses
+GRANT EXECUTE ON OBJECT::TCC_GetPhiThetaAllMajorsByMail
     TO dats5;  
 GO  
