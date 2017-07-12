@@ -84,6 +84,8 @@ DECLARE db_cursor CURSOR FOR
 								select 
 								dbo.getTermText(@S1) as STerm,
 								@stuid as Studentuid,
+								dbo.getStudentLetterGradeByClass(@stuid,'BIO','130',@S1) as BIO130,
+								dbo.getStudentLetterGradeByClass(@stuid,'BIO','131',@S1) as BIO131,
 								dbo.getStudentLetterGradeByClass(@stuid,'NU','110',@S1) as NU110,
 								dbo.getStudentLetterGradeByClass(@stuid,'NU','112',@S1) as NU112,
 								dbo.getStudentLetterGradeByClass(@stuid,'NU','114',@S1) as NU114,
@@ -103,6 +105,8 @@ DECLARE db_cursor CURSOR FOR
 								select 
 								dbo.getTermText(@S2) as STerm,
 								@stuid as Studentuid,
+								dbo.getStudentLetterGradeByClass(@stuid,'BIO','130',@S2) as BIO130,
+								dbo.getStudentLetterGradeByClass(@stuid,'BIO','131',@S2) as BIO131,
 								dbo.getStudentLetterGradeByClass(@stuid,'NU','110',@S2) as NU110,
 								dbo.getStudentLetterGradeByClass(@stuid,'NU','112',@S2) as NU112,
 								dbo.getStudentLetterGradeByClass(@stuid,'NU','114',@S2) as NU114,
@@ -120,6 +124,8 @@ DECLARE db_cursor CURSOR FOR
 								select 
 								dbo.getTermText(@S3) as STerm,
 								@stuid as Studentuid,
+								dbo.getStudentLetterGradeByClass(@stuid,'BIO','130',@S3) as BIO130,
+								dbo.getStudentLetterGradeByClass(@stuid,'BIO','131',@S3) as BIO131,
 								dbo.getStudentLetterGradeByClass(@stuid,'NU','110',@S3) as NU110,
 								dbo.getStudentLetterGradeByClass(@stuid,'NU','112',@S3) as NU112,
 								dbo.getStudentLetterGradeByClass(@stuid,'NU','114',@S3) as NU114,
@@ -137,6 +143,8 @@ DECLARE db_cursor CURSOR FOR
 								select 
 								dbo.getTermText(@S4) as STerm,
 								@stuid as Studentuid,
+								dbo.getStudentLetterGradeByClass(@stuid,'BIO','130',@S4) as BIO130,
+								dbo.getStudentLetterGradeByClass(@stuid,'BIO','131',@S4) as BIO131,
 								dbo.getStudentLetterGradeByClass(@stuid,'NU','110',@S4) as NU110,
 								dbo.getStudentLetterGradeByClass(@stuid,'NU','112',@S4) as NU112,
 								dbo.getStudentLetterGradeByClass(@stuid,'NU','114',@S4) as NU114,
@@ -154,6 +162,8 @@ DECLARE db_cursor CURSOR FOR
 								select 
 								dbo.getTermText(@S5) as STerm,
 								@stuid as Studentuid,
+								dbo.getStudentLetterGradeByClass(@stuid,'BIO','130',@S5) as BIO130,
+								dbo.getStudentLetterGradeByClass(@stuid,'BIO','131',@S5) as BIO131,
 								dbo.getStudentLetterGradeByClass(@stuid,'NU','110',@S5) as NU110,
 								dbo.getStudentLetterGradeByClass(@stuid,'NU','112',@S5) as NU112,
 								dbo.getStudentLetterGradeByClass(@stuid,'NU','114',@S5) as NU114,
@@ -172,6 +182,8 @@ DECLARE db_cursor CURSOR FOR
 								select 
 								dbo.getTermText(@S6) as STerm,
 								@stuid as Studentuid,
+								dbo.getStudentLetterGradeByClass(@stuid,'BIO','130',@S6) as BIO130,
+								dbo.getStudentLetterGradeByClass(@stuid,'BIO','131',@S6) as BIO131,
 								dbo.getStudentLetterGradeByClass(@stuid,'NU','110',@S6) as NU110,
 								dbo.getStudentLetterGradeByClass(@stuid,'NU','112',@S6) as NU112,
 								dbo.getStudentLetterGradeByClass(@stuid,'NU','114',@S6) as NU114,
@@ -189,6 +201,8 @@ DECLARE db_cursor CURSOR FOR
 								select 
 								dbo.getTermText(@S7) as STerm,
 								@stuid as Studentuid,
+								dbo.getStudentLetterGradeByClass(@stuid,'BIO','130',@S7) as BIO130,
+								dbo.getStudentLetterGradeByClass(@stuid,'BIO','131',@S7) as BIO131,
 								dbo.getStudentLetterGradeByClass(@stuid,'NU','110',@S7) as NU110,
 								dbo.getStudentLetterGradeByClass(@stuid,'NU','112',@S7) as NU112,
 								dbo.getStudentLetterGradeByClass(@stuid,'NU','114',@S7) as NU114,
@@ -209,6 +223,8 @@ DECLARE db_cursor CURSOR FOR
 								select 
 								dbo.getTermText(@S1) as STerm,
 								@stuid as Studentuid,
+								dbo.getStudentLetterGradeByClass(@stuid,'BIO','130',@S1) as BIO130,
+								dbo.getStudentLetterGradeByClass(@stuid,'BIO','131',@S1) as BIO131,
 								dbo.getStudentLetterGradeByClass(@stuid,'NU','110',@S1) as NU110,
 								dbo.getStudentLetterGradeByClass(@stuid,'NU','112',@S1) as NU112,
 								dbo.getStudentLetterGradeByClass(@stuid,'NU','114',@S1) as NU114,
@@ -228,6 +244,8 @@ DECLARE db_cursor CURSOR FOR
 								select 
 								dbo.getTermText(@S2) as STerm,
 								@stuid as Studentuid,
+								dbo.getStudentLetterGradeByClass(@stuid,'BIO','130',@S2) as BIO130,
+								dbo.getStudentLetterGradeByClass(@stuid,'BIO','131',@S2) as BIO131,
 								dbo.getStudentLetterGradeByClass(@stuid,'NU','110',@S2) as NU110,
 								dbo.getStudentLetterGradeByClass(@stuid,'NU','112',@S2) as NU112,
 								dbo.getStudentLetterGradeByClass(@stuid,'NU','114',@S2) as NU114,
@@ -245,6 +263,8 @@ DECLARE db_cursor CURSOR FOR
 								select 
 								dbo.getTermText(@S3) as STerm,
 								@stuid as Studentuid,
+								dbo.getStudentLetterGradeByClass(@stuid,'BIO','130',@S3) as BIO130,
+								dbo.getStudentLetterGradeByClass(@stuid,'BIO','131',@S3) as BIO131,
 								dbo.getStudentLetterGradeByClass(@stuid,'NU','110',@S3) as NU110,
 								dbo.getStudentLetterGradeByClass(@stuid,'NU','112',@S3) as NU112,
 								dbo.getStudentLetterGradeByClass(@stuid,'NU','114',@S3) as NU114,
@@ -262,6 +282,8 @@ DECLARE db_cursor CURSOR FOR
 								select 
 								dbo.getTermText(@S4) as STerm,
 								@stuid as Studentuid,
+								dbo.getStudentLetterGradeByClass(@stuid,'BIO','130',@S4) as BIO130,
+								dbo.getStudentLetterGradeByClass(@stuid,'BIO','131',@S4) as BIO131,
 								dbo.getStudentLetterGradeByClass(@stuid,'NU','110',@S4) as NU110,
 								dbo.getStudentLetterGradeByClass(@stuid,'NU','112',@S4) as NU112,
 								dbo.getStudentLetterGradeByClass(@stuid,'NU','114',@S4) as NU114,
@@ -279,6 +301,8 @@ DECLARE db_cursor CURSOR FOR
 								select 
 								dbo.getTermText(@S5) as STerm,
 								@stuid as Studentuid,
+								dbo.getStudentLetterGradeByClass(@stuid,'BIO','130',@S5) as BIO130,
+								dbo.getStudentLetterGradeByClass(@stuid,'BIO','131',@S5) as BIO131,
 								dbo.getStudentLetterGradeByClass(@stuid,'NU','110',@S5) as NU110,
 								dbo.getStudentLetterGradeByClass(@stuid,'NU','112',@S5) as NU112,
 								dbo.getStudentLetterGradeByClass(@stuid,'NU','114',@S5) as NU114,
@@ -297,6 +321,8 @@ DECLARE db_cursor CURSOR FOR
 								select 
 								dbo.getTermText(@S6) as STerm,
 								@stuid as Studentuid,
+								dbo.getStudentLetterGradeByClass(@stuid,'BIO','130',@S6) as BIO130,
+								dbo.getStudentLetterGradeByClass(@stuid,'BIO','131',@S6) as BIO131,
 								dbo.getStudentLetterGradeByClass(@stuid,'NU','110',@S6) as NU110,
 								dbo.getStudentLetterGradeByClass(@stuid,'NU','112',@S6) as NU112,
 								dbo.getStudentLetterGradeByClass(@stuid,'NU','114',@S6) as NU114,
@@ -314,6 +340,8 @@ DECLARE db_cursor CURSOR FOR
 								select 
 								dbo.getTermText(@S7) as STerm,
 								@stuid as Studentuid,
+								dbo.getStudentLetterGradeByClass(@stuid,'BIO','130',@S7) as BIO130,
+								dbo.getStudentLetterGradeByClass(@stuid,'BIO','131',@S7) as BIO131,
 								dbo.getStudentLetterGradeByClass(@stuid,'NU','110',@S7) as NU110,
 								dbo.getStudentLetterGradeByClass(@stuid,'NU','112',@S7) as NU112,
 								dbo.getStudentLetterGradeByClass(@stuid,'NU','114',@S7) as NU114,
