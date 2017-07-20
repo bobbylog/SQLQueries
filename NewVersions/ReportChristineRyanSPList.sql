@@ -10,6 +10,7 @@ SELECT DISTINCT
                LTRIM(RTRIM(ST1.FirstName)) AS FirstName, 
                ST1.MiddleInitial, 
                MM1.MajorMinorName AS DegreeProgram,
+               SS1.EnrollmentStatusID,
                --SP1.AdvisorID
                (select A.Firstname+' '+A.LastName from advisors A where A.advisorid=SP1.AdvisorID) as Advisor
                --LTRIM(RTRIM(ST1.LastName)) + SUBSTRING(LTRIM(RTRIM(ST1.FirstName)), 1, 1) AS USERID
@@ -29,7 +30,7 @@ FROM  dbo.SRAcademic AS SR1 LEFT OUTER JOIN
                dbo.StudentStatus AS SS1 ON SR1.StudentUID = SS1.StudentUID AND SR1.TermCalendarID = SS1.TermCalendarID LEFT OUTER JOIN
                dbo.StudentProgram AS SP1 ON SS1.StudentStatusID = SP1.StudentStatusID LEFT OUTER JOIN
                dbo.MajorMinor AS MM1 ON SP1.MajorProgramID = MM1.MajorMinorID
-WHERE (TC1.TextTerm = 'SP-17') 
+WHERE (TC1.TextTerm = 'FA-17') 
 --AND (NOT (GL1.DisplayText = 'Transfer')) 
 AND (NOT (ST1.LastName = 'Testperson'))
 ORDER BY LastName, FirstName
@@ -80,16 +81,17 @@ select SP.*  from #TmpSP17List SP
 --where StudentUID=120434
  select *,  
  isnull([dbo].[getSumTransferCreditsAll] (StudentUID),0) As CumTransferCredits,
- isnull([dbo].[getSumTransferCreditsPerTerm] (StudentUID,614),0) as TermTransferCredits,
+ --isnull([dbo].[getSumTransferCreditsPerTerm] (StudentUID,616),0) as TermTransferCredits,
  isnull([dbo].[getSumTrocaireEarnedCreditsAll] (StudentUID),0) as TrocCumEarnedCredits,
- isnull([dbo].[getSumTrocaireEarnedCreditsPerTerm] (StudentUID,614),0) as TrocTermEarnedCredits,
- ISNULL([dbo].[getSumTrocaireCreditsTakenAll] (StudentUID),0) as CumCreditsTaken,
- isnull([dbo].[getSumTrocaireCreditsTakenPerTerm] (StudentUID,614),0) as TermsCreditsTaken,
+-- isnull([dbo].[getSumTrocaireEarnedCreditsPerTerm] (StudentUID,616),0) as TrocTermEarnedCredits,
+ --ISNULL([dbo].[getSumTrocaireCreditsTakenAll] (StudentUID),0) as CumCreditsTaken,
+-- isnull([dbo].[getSumTrocaireCreditsTakenPerTerm] (StudentUID,616),0) as TermsCreditsTaken,
  case when dbo.isStudentEnrolled(StudentUID,616) =0 then 'No' else 'Yes' end As EnrolledFA17,
  case when dbo.isStudentRegisteredFormTerm(StudentUID,616) =0 then 'No' else 'Yes' end As RegisteredFA17 
 
  
  from #TmpSP17List
+ Where EnrollmentStatusID=2
  
 
 --Graduate of May 2017
