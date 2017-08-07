@@ -1,7 +1,7 @@
 /********************************************************************/
 /*  This is the one to use.  Last used 4/26/17 to delete students  */
 /*  with last term equalSU-12', 'FA-12', 'FA-BSN-12', 'SP-12','SP-13',*/
-/*'SU-13','FA-13','SP-14','SU-14','FA-14', 'FA-BSN-13', 'FA-BSN-14', 'SP-15'*/
+/*'SU-13','FA-13','SP-14','SU-14','FA-14', 'FA-BSN-13', 'FA-BSN-14', 'SP-15', 'SU-15'*/
 /********************************************************************/
 
 SELECT AC.ACCOUNT, AC.CUSTOM, AC.FNAME, AC.LNAME, AC.P_TITLE, ST.StudentUID
@@ -39,28 +39,29 @@ FROM #RW R1
 SELECT *
 INTO #Delete
 FROM #Final   
-WHERE DisplayTerm IN ('SU-12', 'FA-12', 'FA-BSN-12', 'SP-12','SP-13','SU-13','FA-13','SP-14','SU-14','FA-14', 'FA-BSN-13', 'FA-BSN-14', 'SP-15')
+--WHERE DisplayTerm IN ('SU-12', 'FA-12', 'FA-BSN-12', 'SP-12','SP-13','SU-13','FA-13','SP-14','SU-14','FA-14', 'FA-BSN-13', 'FA-BSN-14', 'SP-15')
+WHERE DisplayTerm IN ('SU-12', 'FA-12', 'FA-BSN-12', 'SP-12','SP-13','SU-13','FA-13','SP-14','SU-14','FA-14', 'FA-BSN-13', 'FA-BSN-14', 'SP-15','SU-15')
+ORDER BY LastTerm, LNAME, FNAME
+
+/*
+SELECT * FROM #DELETE
 ORDER BY LastTerm, LNAME, FNAME
 
 
-/*SELECT * FROM #DELETE
-ORDER BY LastTerm, LNAME, FNAME
-*/
 
-/*
 SELECT *
 FROM OneCard.onecard2.ACCOUNTS
 WHERE CUSTOM IN (SELECT CUSTOM FROM #Delete)
-*/
 
-/*
+
+
 SELECT *
-INTO OneCard.dbo.DELETES042617
+INTO OneCard.dbo.DELETES072617
 FROM OneCard.onecard2.ACCOUNTS
 WHERE CUSTOM IN (SELECT CUSTOM FROM #Delete)
-*/
 
-/*
+
+
 DELETE FROM OneCard.onecard2.ACCOUNTS
 WHERE CUSTOM IN (SELECT CUSTOM FROM #Delete)
 */
