@@ -9,5 +9,5 @@ FROM  dbo.Student AS ST1 LEFT OUTER JOIN
                dbo.StudentStatus AS SS1 ON SR1.StudentUID = SS1.StudentUID AND SR1.TermCalendarID = SS1.TermCalendarID LEFT OUTER JOIN
                dbo.StudentProgram AS SP1 ON SS1.StudentStatusID = SP1.StudentStatusID LEFT OUTER JOIN
                dbo.MajorMinor AS MM1 ON SP1.MajorProgramID = MM1.MajorMinorID
-WHERE (TC1.TextTerm = 'sp-17') AND (NOT (GL1.DisplayText = 'Transfer')) AND (NOT (ST1.LastName = 'Testperson'))
+WHERE (TC1.TextTerm = 'fa-17') AND (NOT (GL1.DisplayText = 'Transfer')) AND (NOT (ST1.LastName = 'Testperson'))
 ORDER BY LastName, FirstName
