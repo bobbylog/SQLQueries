@@ -33,11 +33,12 @@ FROM  dbo.SRAcademic AS SR1 LEFT OUTER JOIN
 WHERE (TC1.TextTerm = 'FA-17') 
 --AND (NOT (GL1.DisplayText = 'Transfer')) 
 AND (NOT (ST1.LastName = 'Testperson'))
+and SP1.SequenceNo=0
 ORDER BY LastName, FirstName
 
 
 
-select SP.*  from #TmpSP17List SP
+--select SP.*  from #TmpSP17List SP
 
 
 --select StudentUID, sum(Credits) as TotalCreditHours, sum(CumulativeEarned) as TotalCreditsEarned, sum(CumulativeGPAHours) as TotalGPAHours
@@ -88,7 +89,6 @@ select SP.*  from #TmpSP17List SP
 -- isnull([dbo].[getSumTrocaireCreditsTakenPerTerm] (StudentUID,616),0) as TermsCreditsTaken,
  case when dbo.isStudentEnrolled(StudentUID,616) =0 then 'No' else 'Yes' end As EnrolledFA17,
  case when dbo.isStudentRegisteredFormTerm(StudentUID,616) =0 then 'No' else 'Yes' end As RegisteredFA17 
-
  
  from #TmpSP17List
  Where EnrollmentStatusID=2
@@ -101,4 +101,6 @@ select SP.*  from #TmpSP17List SP
 --and YEAR(graduationdate)=2017
 
 --drop table #TmpAboutHours
+
+
 drop table #TmpSP17List
