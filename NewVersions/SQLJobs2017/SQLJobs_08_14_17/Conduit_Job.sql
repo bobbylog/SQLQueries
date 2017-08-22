@@ -1,11 +1,11 @@
 USE [msdb]
 GO
 
-/****** Object:  Job [Conduit_Job]    Script Date: 8/14/2017 10:33:26 AM ******/
+/****** Object:  Job [Conduit_Job]    Script Date: 8/21/2017 4:28:58 PM ******/
 BEGIN TRANSACTION
 DECLARE @ReturnCode INT
 SELECT @ReturnCode = 0
-/****** Object:  JobCategory [[Uncategorized (Local)]]]    Script Date: 8/14/2017 10:33:26 AM ******/
+/****** Object:  JobCategory [[Uncategorized (Local)]]]    Script Date: 8/21/2017 4:28:58 PM ******/
 IF NOT EXISTS (SELECT name FROM msdb.dbo.syscategories WHERE name=N'[Uncategorized (Local)]' AND category_class=1)
 BEGIN
 EXEC @ReturnCode = msdb.dbo.sp_add_category @class=N'JOB', @type=N'LOCAL', @name=N'[Uncategorized (Local)]'
@@ -26,7 +26,7 @@ EXEC @ReturnCode =  msdb.dbo.sp_add_job @job_name=N'Conduit_Job',
 		@owner_login_name=N'TROCAIRE\EtienneS', 
 		@notify_email_operator_name=N'System Admin', @job_id = @jobId OUTPUT
 IF (@@ERROR <> 0 OR @ReturnCode <> 0) GOTO QuitWithRollback
-/****** Object:  Step [Processing]    Script Date: 8/14/2017 10:33:26 AM ******/
+/****** Object:  Step [Processing]    Script Date: 8/21/2017 4:28:58 PM ******/
 EXEC @ReturnCode = msdb.dbo.sp_add_jobstep @job_id=@jobId, @step_name=N'Processing', 
 		@step_id=1, 
 		@cmdexec_success_code=0, 
@@ -53,14 +53,26 @@ set @tmstp=CONVERT(char(8), GETDATE(), 112)
 set @globalcmdstr = @cmdstr+''.csv''
 EXEC  master..xp_cmdshell ''del D:\Conduit\*user*''
 EXEC  master..xp_cmdshell @globalcmdstr
+EXEC  master..xp_cmdshell ''findstr /v /c:"------,--------,---,-----,--------,---------,--------" D:\Conduit\user.csv > D:\Conduit\user2.csv''
+EXEC  master..xp_cmdshell ''del D:\Conduit\user.csv''
+EXEC  master..xp_cmdshell ''move D:\Conduit\user2.csv d:\Conduit\user.csv''
+
 
 set @globalcmdstr = @cmdstr1+''.csv''
 EXEC  master..xp_cmdshell ''del D:\Conduit\*course*''
 EXEC  master..xp_cmdshell @globalcmdstr
+EXEC  master..xp_cmdshell ''findstr /v /c:"------,---------,--------,--------" D:\Conduit\course.csv > D:\Conduit\course2.csv''
+EXEC  master..xp_cmdshell ''del D:\Conduit\course.csv''
+EXEC  master..xp_cmdshell ''move D:\Conduit\course2.csv d:\Conduit\course.csv''
+
+
 
 set @globalcmdstr = @cmdstr2+''.csv''
 EXEC  master..xp_cmdshell ''del D:\Conduit\*enroll*''
 EXEC  master..xp_cmdshell @globalcmdstr
+EXEC  master..xp_cmdshell ''findstr /v /c:"------,--------,------,----,------" D:\Conduit\enroll.csv > D:\Conduit\enroll2.csv''
+EXEC  master..xp_cmdshell ''del D:\Conduit\enroll.csv''
+EXEC  master..xp_cmdshell ''move D:\Conduit\enroll2.csv d:\Conduit\enroll.csv''
 
 
 

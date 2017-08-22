@@ -1,11 +1,11 @@
 USE [msdb]
 GO
 
-/****** Object:  Job [Purple_Briefcase_JOB]    Script Date: 8/14/2017 10:38:42 AM ******/
+/****** Object:  Job [Purple_Briefcase_JOB]    Script Date: 8/21/2017 4:36:13 PM ******/
 BEGIN TRANSACTION
 DECLARE @ReturnCode INT
 SELECT @ReturnCode = 0
-/****** Object:  JobCategory [[Uncategorized (Local)]]]    Script Date: 8/14/2017 10:38:42 AM ******/
+/****** Object:  JobCategory [[Uncategorized (Local)]]]    Script Date: 8/21/2017 4:36:13 PM ******/
 IF NOT EXISTS (SELECT name FROM msdb.dbo.syscategories WHERE name=N'[Uncategorized (Local)]' AND category_class=1)
 BEGIN
 EXEC @ReturnCode = msdb.dbo.sp_add_category @class=N'JOB', @type=N'LOCAL', @name=N'[Uncategorized (Local)]'
@@ -26,7 +26,7 @@ EXEC @ReturnCode =  msdb.dbo.sp_add_job @job_name=N'Purple_Briefcase_JOB',
 		@owner_login_name=N'TROCAIRE\EtienneS', 
 		@notify_email_operator_name=N'System Admin', @job_id = @jobId OUTPUT
 IF (@@ERROR <> 0 OR @ReturnCode <> 0) GOTO QuitWithRollback
-/****** Object:  Step [Processing]    Script Date: 8/14/2017 10:38:42 AM ******/
+/****** Object:  Step [Processing]    Script Date: 8/21/2017 4:36:13 PM ******/
 EXEC @ReturnCode = msdb.dbo.sp_add_jobstep @job_id=@jobId, @step_name=N'Processing', 
 		@step_id=1, 
 		@cmdexec_success_code=0, 
@@ -41,13 +41,24 @@ EXEC @ReturnCode = msdb.dbo.sp_add_jobstep @job_id=@jobId, @step_name=N'Processi
 DECLARE @tmstp varchar(15)
 DECLARE @globalcmdstr varchar(215)
 
+
 set @cmdstr= ''SQLCMD -S trocaire-sql01 -E  -s, -W -Q "set nocount on; Exec CAMS_Enterprise.dbo.CTM_UpLoadPurpleBriefcaseStudents"  > D:\SFTP\PurpleBriefcase\Exports\Trocaire_Purple_Briefcase_Data_File''
 set @tmstp=LEFT(CONVERT(VARCHAR, GETDATE(), 120), 10)
-set @globalcmdstr = @cmdstr+''_''+@tmstp+''.csv''
+set @globalcmdstr = @cmdstr+''.csv''
 --set @globalcmdstr = @cmdstr+''.csv''
 
 EXEC  master..xp_cmdshell ''del D:\SFTP\PurpleBriefcase\Exports\*Purple_Briefcase*''
 EXEC  master..xp_cmdshell @globalcmdstr
+EXEC  master..xp_cmdshell ''findstr /v /c:"--------,---------,-----,--------------,---------,-,-,----,---------,---,-----------,--------,------,------,-----,-----,--------,------,------,---,--------,----------,------,-------"  D:\SFTP\PurpleBriefcase\Exports\Trocaire_Purple_Briefcase_Data_File.csv > D:\SFTP\PurpleBriefcase\Exports\Trocaire_Purple_Briefcase_Data_File2.csv''
+EXEC  master..xp_cmdshell ''del D:\SFTP\PurpleBriefcase\Exports\Trocaire_Purple_Briefcase_Data_File.csv''
+EXEC  master..xp_cmdshell ''move D:\SFTP\PurpleBriefcase\Exports\Trocaire_Purple_Briefcase_Data_File2.csv D:\SFTP\PurpleBriefcase\Exports\Trocaire_Purple_Briefcase_Data_File.csv''
+
+
+
+
+EXEC  master..xp_cmdshell ''schtasks /run /tn WinscpPurpleBriefcaseSync''
+
+
 GO
 ', 
 		@database_name=N'master', 
