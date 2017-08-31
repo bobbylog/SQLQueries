@@ -1,11 +1,11 @@
 USE [msdb]
 GO
 
-/****** Object:  Job [BN_TO_CAMS_JOB_FA-17]    Script Date: 8/14/2017 10:31:26 AM ******/
+/****** Object:  Job [BN_TO_CAMS_JOB_FA-17]    Script Date: 8/31/2017 2:51:00 PM ******/
 BEGIN TRANSACTION
 DECLARE @ReturnCode INT
 SELECT @ReturnCode = 0
-/****** Object:  JobCategory [[Uncategorized (Local)]]]    Script Date: 8/14/2017 10:31:26 AM ******/
+/****** Object:  JobCategory [[Uncategorized (Local)]]]    Script Date: 8/31/2017 2:51:00 PM ******/
 IF NOT EXISTS (SELECT name FROM msdb.dbo.syscategories WHERE name=N'[Uncategorized (Local)]' AND category_class=1)
 BEGIN
 EXEC @ReturnCode = msdb.dbo.sp_add_category @class=N'JOB', @type=N'LOCAL', @name=N'[Uncategorized (Local)]'
@@ -26,7 +26,7 @@ EXEC @ReturnCode =  msdb.dbo.sp_add_job @job_name=N'BN_TO_CAMS_JOB_FA-17',
 		@owner_login_name=N'TROCAIRE\EtienneS', 
 		@notify_email_operator_name=N'System Admin', @job_id = @jobId OUTPUT
 IF (@@ERROR <> 0 OR @ReturnCode <> 0) GOTO QuitWithRollback
-/****** Object:  Step [Processing]    Script Date: 8/14/2017 10:31:26 AM ******/
+/****** Object:  Step [Processing]    Script Date: 8/31/2017 2:51:00 PM ******/
 EXEC @ReturnCode = msdb.dbo.sp_add_jobstep @job_id=@jobId, @step_name=N'Processing', 
 		@step_id=1, 
 		@cmdexec_success_code=0, 
@@ -37,7 +37,8 @@ EXEC @ReturnCode = msdb.dbo.sp_add_jobstep @job_id=@jobId, @step_name=N'Processi
 		@retry_attempts=0, 
 		@retry_interval=0, 
 		@os_run_priority=0, @subsystem=N'TSQL', 
-		@command=N'Use CAMS_enterprise
+		@command=N'
+Use CAMS_enterprise
 --drop table #tmptable
 --drop table #tmpret
 --drop table #tmp
@@ -54,7 +55,7 @@ EXEC @ReturnCode = msdb.dbo.sp_add_jobstep @job_id=@jobId, @step_name=N'Processi
  
  set @tnc=0
  set @nt=0
- set @Tm=615
+ set @Tm=616
  
  set @rfld=''FA17\Raw\''
  set @pfld=''FA17\Processed\''
@@ -98,7 +99,7 @@ if (@tnc=0) and (@nc1 >0)
 		-- into #TmpRet
 		-- from #Tmp
 		 
-		 select Field4, Field6, sum(cast (Field71 as numeric (5,2))) as FL7 , Field8
+		 select Field4, Field6, sum(cast (Field71 as numeric (6,2))) as FL7 , Field8
 		 into #TmpRet1
 		 from #Tmp
 		 group by  Field8, Field4, Field6
@@ -106,6 +107,8 @@ if (@tnc=0) and (@nc1 >0)
 		 select Field4, Field6, cast (FL7 as varchar) as Field7 , Field8
 		 into #TmpRet
 		 from #TmpRet1
+                                 where Field4 is not null
+
 
 		--select * from #TmpRet
 
@@ -145,8 +148,7 @@ if (@tnc=0) and (@nc1 >0)
 								
 											DECLARE db_cursor CURSOR FOR  
 											 select Field4,  Field6, Field7, Field8  from #TmpRet
-											
-
+											 
 											OPEN db_cursor   
 											FETCH NEXT FROM db_cursor INTO @name4, @name6, @name7, @name8
 
@@ -165,13 +167,13 @@ if (@tnc=0) and (@nc1 >0)
 														@name8, 
 														418, 
 														case @name6 when ''IN'' then ''DEBIT'' else ''CREDIT'' end ,
-														dbo.getstudentUIDFromID(ltrim(rtrim(@name4))), 
+														isnull(dbo.getstudentUIDFromID(ltrim(rtrim(@name4))),0), 
 														''BookStore Charges (BNA)'', 
-														CAST (@name7 as numeric(5,2)),
+														isnull(CAST (@name7 as numeric(6,2)),0),
 														case @name6 when ''IN'' then 1 else -1 end, 
-														case @name6 when ''IN'' then CAST (@name7 as numeric(5,2)) else -1 * CAST (@name7 as numeric(5,2)) end ,
-														 case @name6 when ''IN'' then CAST (@name7 as numeric(5,2)) else 0 end, 
-														case @name6 when ''IN'' then 0 else CAST (@name7 as numeric(5,2)) end ,
+														case @name6 when ''IN'' then isnull(CAST (@name7 as numeric(6,2)),0) else -1 * isnull(CAST (@name7 as numeric(6,2)),0) end ,
+														 case @name6 when ''IN'' then isnull(CAST (@name7 as numeric(6,2)),0) else 0 end, 
+														case @name6 when ''IN'' then 0 else isnull(CAST (@name7 as numeric(6,2)),0) end ,
 														0,
 														''TCCAMSMGR'', 
 														GETDATE(),0,0,0,0,0,'''','''' )
@@ -194,7 +196,7 @@ if (@tnc=0) and (@nc1 >0)
 											-- Send an email
 											EXEC msdb.dbo.sp_send_dbmail 
 											@profile_name=''TROCMAIL'',
-											@recipients = ''desbordesd@trocaire.edu;PuckerinB@Trocaire.edu;etiennes@trocaire.edu'', 
+											@recipients = ''desbordesd@trocaire.edu;PuckerinB@Trocaire.edu;etiennes@trocaire.edu;ziadalm@advance2000.com'', 
 											-- @query = ''SELECT * FROM CAMS_ENTERPRISE.dbo.tmpStudentStatHistory WHERE DAY(SDATE)=DAY(GETDATE()) AND MONTH(SDATE)=MONTH(GETDATE()) AND YEAR(SDATE)=YEAR(GETDATE())'',
 											@subject = @topic ,
 											@body = @tbody ;  
@@ -217,7 +219,7 @@ else
 						-- Send an email
 											EXEC msdb.dbo.sp_send_dbmail 
 											@profile_name=''TROCMAIL'',
-											@recipients = ''jcipperly@bncollege.com;nrochez@bncollege.com;desbordesd@trocaire.edu;PuckerinB@Trocaire.edu;etiennes@trocaire.edu'', 
+											@recipients = ''jcipperly@bncollege.com;nrochez@bncollege.com;desbordesd@trocaire.edu;PuckerinB@Trocaire.edu;etiennes@trocaire.edu;ziadalm@advance2000.com'', 
 											-- @query = ''SELECT * FROM CAMS_ENTERPRISE.dbo.tmpStudentStatHistory WHERE DAY(SDATE)=DAY(GETDATE()) AND MONTH(SDATE)=MONTH(GETDATE()) AND YEAR(SDATE)=YEAR(GETDATE())'',
 											@subject = @Topic ,
 											@body = @tbody ;  
@@ -241,7 +243,7 @@ EXEC @ReturnCode = msdb.dbo.sp_add_jobschedule @job_id=@jobId, @name=N'BNTOCAMSS
 		@freq_recurrence_factor=1, 
 		@active_start_date=20170206, 
 		@active_end_date=99991231, 
-		@active_start_time=53000, 
+		@active_start_time=103000, 
 		@active_end_time=235959, 
 		@schedule_uid=N'c697c249-a4d6-46d6-b0bb-7d56a0e7479c'
 IF (@@ERROR <> 0 OR @ReturnCode <> 0) GOTO QuitWithRollback
