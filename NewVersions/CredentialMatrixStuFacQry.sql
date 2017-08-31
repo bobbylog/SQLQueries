@@ -5,9 +5,9 @@ LastName like 'lap%'
 
 select [dbo].[getAdvisorDetailsByStudentID] ('sp-17','A0000023963',6) as advisordetails
 
-select FacultyID, LastName, FirstName from faculty where lastname like 'dee%'
+select FacultyID, LastName, FirstName from faculty where lastname like 'babcock%'
 
-select FacultyID, PortalAlias, PortalPassword, PortalAccess from FacultyPortal where FacultyID=69559
+select FacultyID, PortalAlias, PortalPassword, PortalAccess from FacultyPortal where FacultyID=20681
 
 select StudentUID, PortalPassword, LastName, FirstName, PortalHandle, PortalEnable, PortalPIN, PINValidateDT from CAMS_Student_Portal_Who_View
 where StudentUID=75725
