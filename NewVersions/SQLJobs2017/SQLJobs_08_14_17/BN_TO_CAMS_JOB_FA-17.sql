@@ -1,11 +1,11 @@
 USE [msdb]
 GO
 
-/****** Object:  Job [BN_TO_CAMS_JOB_FA-17]    Script Date: 8/31/2017 2:51:00 PM ******/
+/****** Object:  Job [BN_TO_CAMS_JOB_FA-17]    Script Date: 9/1/2017 10:35:47 AM ******/
 BEGIN TRANSACTION
 DECLARE @ReturnCode INT
 SELECT @ReturnCode = 0
-/****** Object:  JobCategory [[Uncategorized (Local)]]]    Script Date: 8/31/2017 2:51:00 PM ******/
+/****** Object:  JobCategory [[Uncategorized (Local)]]]    Script Date: 9/1/2017 10:35:47 AM ******/
 IF NOT EXISTS (SELECT name FROM msdb.dbo.syscategories WHERE name=N'[Uncategorized (Local)]' AND category_class=1)
 BEGIN
 EXEC @ReturnCode = msdb.dbo.sp_add_category @class=N'JOB', @type=N'LOCAL', @name=N'[Uncategorized (Local)]'
@@ -26,7 +26,7 @@ EXEC @ReturnCode =  msdb.dbo.sp_add_job @job_name=N'BN_TO_CAMS_JOB_FA-17',
 		@owner_login_name=N'TROCAIRE\EtienneS', 
 		@notify_email_operator_name=N'System Admin', @job_id = @jobId OUTPUT
 IF (@@ERROR <> 0 OR @ReturnCode <> 0) GOTO QuitWithRollback
-/****** Object:  Step [Processing]    Script Date: 8/31/2017 2:51:00 PM ******/
+/****** Object:  Step [Processing]    Script Date: 9/1/2017 10:35:47 AM ******/
 EXEC @ReturnCode = msdb.dbo.sp_add_jobstep @job_id=@jobId, @step_name=N'Processing', 
 		@step_id=1, 
 		@cmdexec_success_code=0, 
@@ -62,7 +62,8 @@ Use CAMS_enterprise
  
  set @cmd1=  ''copy d:\sftp\barnes_noble\imports\AR*V3.csv d:\sftp\barnes_noble\imports\Archives\''+@rfld
 								
- 
+ EXEC  master..xp_cmdshell ''schtasks /run /tn WinscpBNToCAMSIn''
+ WAITFOR DELAY ''00:00:10'';
  
  EXEC  master..xp_cmdshell ''echo Field1,Field2,Field3,Field4,Field5,Field6,Field7,Field8,Field9 > d:\sftp\barnes_noble\imports\TransactionsProcessed.csv''
  
