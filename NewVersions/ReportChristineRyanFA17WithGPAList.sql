@@ -10,7 +10,7 @@ SELECT DISTINCT
                LTRIM(RTRIM(ST1.FirstName)) AS FirstName, 
                ST1.MiddleInitial, 
                MM1.MajorMinorName AS DegreeProgram,
-               SS1.EnrollmentStatusID,
+               SS1.EnrollmentStatusID, (select e.Status from EnrollmentStatus e where e.EnrollmentStatusID=SS1.enrollmentStatusID) as Status,
 			   dbo.getStudentEmailAddressFromID(ST1.StudentID) as Email,
 			   dbo.getStudentPhoneNo(St1.studentUID) as PhoneNo,
                --SP1.AdvisorID
@@ -87,7 +87,7 @@ dbo.getStudentTrocGPA (StudentUid) as CumGPA
  --case when dbo.isStudentRegisteredFormTerm(StudentUID,616) =0 then 'No' else 'Yes' end As RegisteredFA17 
  
  from #TmpSP17List
- Where EnrollmentStatusID=2
+ --Where EnrollmentStatusID=2
  
 
 --Graduate of May 2017
