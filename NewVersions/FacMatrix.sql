@@ -1,6 +1,6 @@
 select * from faculty
 where lastname in
-('knott','ryan','administrator','semski','becker')
+('knott','ryan','administrator','semski','becker','maki')
 
 select * from facultyportal
 where FacultyID in
@@ -9,5 +9,6 @@ where FacultyID in
 115822,
 124534,
 112077,
-108057
+108057,
+115937
 )
