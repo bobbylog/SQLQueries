@@ -1,4 +1,4 @@
 USE CAMS_Enterprise
-GRANT EXECUTE ON OBJECT::CTM_Nursing_CrossGradeReportByTermAndProgram
+GRANT EXECUTE ON OBJECT::TCC_Student_BYTermAndPrograms
     TO dats5;  
 GO  
