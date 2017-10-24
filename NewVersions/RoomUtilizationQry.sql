@@ -26,8 +26,13 @@ Where A.[Date] >= '10/03/2017' And A.[Date] <= '10/06/2017' And A.TimeFrom >= '1
 S.SrofferID in (select srofferID from #Offering)
 
 SELECT DISTINCT b.SROfferID,Room,ScheduledActivity,Faculty,DayOfWeek,ActivityDateFrom,ActivityDateTo,TimeFrom,TimeTo,OfferDays,
-               [Day],HeaderTable,HeaderID , [dbo].[getAttendanceCountsPerDay](616, b.SROfferID,Day,DayOfWeek ) as ACounts
+               [Day],HeaderTable,HeaderID , isnull([dbo].[getAttendanceCountsPerDay](616, b.SROfferID,DayOfWeek),0) as ACounts
 FROM CAMS_PrintSROfferRoomUtilization_View A INNER JOIN #TmpRooms B On B.RoomScheduleID = A.RoomScheduleID
+where
+Faculty like '%Cole%'
+-- ScheduledActivity like '%health res%'
+--Room='MAIN-027'
+
 
 --SET FMTONLY ON SELECT DISTINCT Room,ScheduledActivity,Faculty,DayOfWeek,ActivityDateFrom,ActivityDateTo,TimeFrom,TimeTo,OfferDays,[Day],HeaderTable,HeaderID FROM CAMS_PrintSROfferRoomUtilization_View A INNER JOIN #TmpRooms B On B.RoomScheduleID = A.RoomScheduleID WHERE 1=2  SET FMTONLY OFF
 --SET FMTONLY ON SELECT DISTINCT Room,ScheduledActivity,Faculty,DayOfWeek,ActivityDateFrom,ActivityDateTo,TimeFrom,TimeTo,OfferDays,[Day],HeaderTable,HeaderID FROM CAMS_PrintSROfferRoomUtilization_View A INNER JOIN #TmpRooms B On B.RoomScheduleID = A.RoomScheduleID WHERE 1=2  SET FMTONLY OFF

@@ -12,6 +12,7 @@ DECLARE @AttData TABLE
 	and srofferid=101150 --100766
 	--and SrofferScheduleID=15078
 
+	select * from @AttData
 
 	select A.DName, avg(A.AttNum) as Average from
 				(
@@ -19,8 +20,8 @@ DECLARE @AttData TABLE
 					--where Status='Present'
 					Group by datt, DName
 					) A
+					 WHere  A.DName='Friday'
 					Group By A.DName
 
-		 --WHere A.Datt=@dat and A.DName=@dn
-
+		
 	--select * from @AttData
