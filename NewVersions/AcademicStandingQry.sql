@@ -13,7 +13,7 @@ LEFT OUTER JOIN CAMS_Enterprise.dbo.Glossary GL8
 WHERE FA2.Active = 1 AND ADD2.ActiveFlag = 'Yes' AND GL8.DisplayText = 'Local'
 ORDER BY FA2.LastName, FA2.FirstName  
     
-SELECT /*TOP 20*/ ST1.StudentID, TC1.TextTerm,
+SELECT /*TOP 20*/ ST1.StudentID, ST1.StudentUID, TC1.TextTerm,
        ST1.LastName, ST1.FirstName, 
        case
             when NOT (ADV1.FormalName IS NULL) then ADV1.FormalName

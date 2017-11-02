@@ -1,5 +1,6 @@
 USE [CAMS_Enterprise]
 
+
 	-- SET NOCOUNT ON added to prevent extra result sets from
 	-- interfering with SELECT statements.
 	SET NOCOUNT ON;
@@ -92,26 +93,42 @@ Exec CAMS_StudentBillingAgingbyDays '12/12/2017', 9999999, 'No','', '#TCCAMSMGRI
 
 
 
-Select Distinct A.StudentID, A.LastName,A.FirstName,A.MiddleName, isnull((sum(B.Debits)),0) as TotalDebits, (isnull((sum(B.Credits)),0)-isnull(B.TotalPending,0)) as TotalCredits, isnull(B.PreviousBalance,0) as PreviousBalance ,isnull(B.TotalPending,0) as Pending, isnull (-((-(sum(B.Debits)- (sum(B.Credits)-B.TotalPending) ))),0) As StatementTotal
+Select Distinct A.StudentID, A.LastName,A.FirstName,A.MiddleName, isnull((sum(B.Debits)),0) as TotalDebits, 
+(isnull((sum(B.Credits)),0)-isnull(B.TotalPending,0)) as TotalCredits, 
+isnull(B.PreviousBalance,0) as PreviousBalance ,
+isnull(B.TotalPending,0) as Pending
+--, 
+--isnull ((sum(B.Debits)-(sum(B.Credits)-B.TotalPending)),0) As StatementTotal, 
+--isnull (-((-(sum(B.Debits)- (sum(B.Credits)-B.TotalPending) -B.TotalPending+B.PreviousBalance ))),0) As OvrAllTotal
+
 into #BillingStmtSummary
 From CAMS_StudentRptBillingStatement_View as A LEFT OUTER JOIN #TCCAMSMGR_STMTS AS B ON A.StudentUID = B.OwnerUIDx 
 LEFT OUTER JOIN TCCAMSMGR_AgingByDays as D ON A.StudentUID = D.StudentUID 
 INNER JOIN #TCCAMSMGRIDPRE AS C ON A.StudentUID = C.OwnerUID WHERE (A.AddressType = 'Billing') AND (A.ActiveFlag = 'Yes') 
+--AND A.LastName='Harris'
 group by A.StudentID, A.LastName,A.FirstName,A.MiddleName, B.PreviousBalance,B.TotalPending, A.StudentUID
 
 
-Select Distinct A.StudentID, A.LastName,A.FirstName,A.MiddleName, B.Debits, B.Credits, isnull(B.PreviousBalance,0) as PreviousBalance ,isnull(B.TotalPending,0) as Pending,isnull (((-(sum(B.Debits)- sum(B.Credits)+B.PreviousBalance))),0) As Balance
-into #BillingStmtSummary1
-From CAMS_StudentRptBillingStatement_View as A LEFT OUTER JOIN #TCCAMSMGR_STMTS AS B ON A.StudentUID = B.OwnerUIDx 
-LEFT OUTER JOIN TCCAMSMGR_AgingByDays as D ON A.StudentUID = D.StudentUID 
-INNER JOIN #TCCAMSMGRIDPRE AS C ON A.StudentUID = C.OwnerUID WHERE (A.AddressType = 'Billing') AND (A.ActiveFlag = 'Yes') 
-group by A.StudentID, A.LastName,A.FirstName,A.MiddleName, B.Debits, B.Credits, B.PreviousBalance, B.TotalPending, A.StudentUID
+--Select Distinct A.StudentID, A.LastName,A.FirstName,A.MiddleName, B.Debits, B.Credits, isnull(B.PreviousBalance,0) as PreviousBalance ,isnull(B.TotalPending,0) as Pending,isnull (((-(sum(B.Debits)- sum(B.Credits)+B.PreviousBalance))),0) As OvrAllTotal
+--into #BillingStmtSummary1
+--From CAMS_StudentRptBillingStatement_View as A LEFT OUTER JOIN #TCCAMSMGR_STMTS AS B ON A.StudentUID = B.OwnerUIDx 
+--LEFT OUTER JOIN TCCAMSMGR_AgingByDays as D ON A.StudentUID = D.StudentUID 
+--INNER JOIN #TCCAMSMGRIDPRE AS C ON A.StudentUID = C.OwnerUID WHERE (A.AddressType = 'Billing') AND (A.ActiveFlag = 'Yes') 
+--group by A.StudentID, A.LastName,A.FirstName,A.MiddleName, B.Debits, B.Credits, B.PreviousBalance, B.TotalPending, A.StudentUID
 
 
-select * from #BillingStmtSummary order by LastName asc
+select  StudentID,LastName, FirstName, MiddleName, TotalDebits, TotalCredits, PreviousBalance,  
+(TotalDebits-TotalCredits) as StatementTotal,
+Pending,
+((TotalDebits-TotalCredits)-Pending+PreviousBalance) as OvrAllTotal
+, 
+case when PreviousBalance > 0 
+then ((TotalDebits-TotalCredits)-Pending+PreviousBalance)
+else (TotalDebits-TotalCredits) end as RefundAmount   
+from #BillingStmtSummary order by LastName asc
 
-select * from #BillingStmtSummary1
-where LastName='spears'
+--select * from #BillingStmtSummary1
+--where LastName='spears'
 
 
 
