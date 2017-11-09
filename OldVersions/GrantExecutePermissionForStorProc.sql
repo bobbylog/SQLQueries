@@ -1,4 +1,4 @@
 USE CAMS_Enterprise
-GRANT EXECUTE ON OBJECT::TCC_Refund_Batch_By_Term
+GRANT EXECUTE ON OBJECT::TCC_Registered_Student_For_BillingWithCoursesForReg
     TO dats5;  
 GO  
