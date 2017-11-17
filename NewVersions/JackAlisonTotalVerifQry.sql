@@ -1,8 +1,8 @@
 drop table #JackData
 
-select * from dbo.FedDataForRecon
+select * from FedDataForRecon_View
 
-select type, sum(NetAmount)  as TotalAlison from dbo.FedDataForRecon
+select type, sum(NetAmount1)  as TotalAlison from FedDataForRecon_View
 group by type
 
 SELECT CAMS_RptBillingLedgerBYOR_View.TextTerm, CAMS_RptBillingLedgerBYOR_View.TransDoc, CAMS_RptBillingLedgerBYOR_View.TransType, 
@@ -19,7 +19,7 @@ FROM  dbo.tmpRptBillingBYOR AS tmpRptBillingBYOR INNER JOIN
                tmpRptBillingBYOR.BillingID = CAMS_RptBillingLedgerBYOR_View.BillingID AND 
                tmpRptBillingBYOR.BillingBatchID = CAMS_RptBillingLedgerBYOR_View.BillingBatchID LEFT OUTER JOIN
                dbo.Student ON tmpRptBillingBYOR.OwnerUID = dbo.Student.StudentUID
-WHERE (tmpRptBillingBYOR.ReportKey =351034)
+WHERE (tmpRptBillingBYOR.ReportKey =353343)
 
 select * from #JackData
 

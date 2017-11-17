@@ -1,35 +1,8 @@
-select portalHandle as UserID, dbo.getStudentIDFromUID(StudentUID) as SID ,  dbo.getStudentEmailAddress(StudentUID) as Email , PortalPassword as NPassword , dbo.getStudentFullNameWOptions(dbo.getStudentIDFromUID(StudentUID), 2) as Lastname, dbo.getStudentFullNameWOptions(dbo.getStudentIDFromUID(StudentUID), 0) as FirstName
+select 'update' as action, portalHandle as username, dbo.getStudentIDFromUID(StudentUID) as SID ,  dbo.getStudentEmailAddress(StudentUID) as Email , PortalPassword as NPassword , dbo.getStudentFullNameWOptions(dbo.getStudentIDFromUID(StudentUID), 2) as Lastname, dbo.getStudentFullNameWOptions(dbo.getStudentIDFromUID(StudentUID), 0) as FirstName
 from studentportal
 where dbo.getStudentIDFromUID(StudentUID) in
 (
-'A0000027652',
-'A0000019241',
-'A0000027940',
-'A0000010142',
-'A0000010947',
-'C0000064986',
-'A0000027891',
-'A0000022387',
-'A0000004460',
-'A0000027641',
-'A0000026736',
-'A0000025658',
-'A0000027885',
-'A0000019136',
-'A0000027736',
-'A0000027790',
-'A0000027512',
-'C0000025907',
-'A0000027719',
-'A0000017535',
-'A0000027014',
-'A0000026374',
-'A0000025449',
-'A0000012887',
-'A0000027821',
-'A0000014683',
-'A0000027777',
-'A0000016404',
-'A0000027896',
-'A0000028012'
+'A0000027898'
+
+
 )
