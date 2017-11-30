@@ -1,0 +1,3 @@
+ <%for each x in rsList.Fields
+										  response.write(x.Name+"<br/>")
+                                            next %>

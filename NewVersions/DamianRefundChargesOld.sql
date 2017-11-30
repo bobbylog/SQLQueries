@@ -130,18 +130,45 @@ from #BillingStmtSummary order by LastName asc
 
 
 
-select 
---top 40
+select top 10
 StudentID,LastName, FirstName, MiddleName, TotalDebits, TotalCredits, PreviousBalance,  
-StatementTotal,Pending, OvrAllTotal,  (-(StatementTotal)-PreviousBalance) as RefundAmount
+StatementTotal,Pending, OvrAllTotal,  (StatementTotal-PreviousBalance) as RefundAmount
 from #BillingStmtSummary1
 where 
-(-(StatementTotal)-PreviousBalance) > 10
 --LastName like 's%'
---StudentID='A0000019318'
+StudentID='A0000019318'
 order by studentID asc
 
 
+
+--Select Distinct A.StudentID, (sum(B.Debits)) As Amount
+--into #BillingDebits
+--From CAMS_StudentRptBillingStatement_View as A LEFT OUTER JOIN #TCCAMSMGR_STMTS AS B ON A.StudentUID = B.OwnerUIDx 
+--LEFT OUTER JOIN TCCAMSMGR_AgingByDays as D ON A.StudentUID = D.StudentUID 
+--INNER JOIN #TCCAMSMGRIDPRE AS C ON A.StudentUID = C.OwnerUID WHERE (A.AddressType = 'Billing') AND (A.ActiveFlag = 'Yes') 
+--AND B.TransDoc='BNBOOKS' 
+---- B.Description like 'bookstore%'
+--group by A.StudentID, A.LastName,A.FirstName,A.MiddleName, B.PreviousBalance, A.StudentUID
+
+
+--select BSS.StudentID, BSS.LastName,BSS.FirstName,BSS.MiddleName, BSS.Amount , isnull((select sum(ex.amount) as totala from #BillingDebits ex where ex.StudentID=BSS.StudentID group by ex.studentid),'0') as expenses ,BSS.ProviderCode, BSS.BeginDate, BSS.EndDate, BSS.IDType, BSS.RecordType, BSS.AccountType, BSS.StudHold
+--into #TmpBillingStmtSummary
+--from  #BillingStmtSummary BSS
+--where (BSS.Amount > 0)
+----and (BSS.StudHold=0)
+--order by BSS.LastName
+
+--select StudentID, LastName, FirstName, MiddleName, ( Amount+ Expenses )  as TmpAmount, 
+--ProviderCode, BeginDate, EndDate, IDType, RecordType, AccountType , StudHold
+--into #FinalBillingStmtSummary
+--from 
+--#TmpBillingStmtSummary
+
+
+--select StudentID, LastName, FirstName, MiddleName,case StudHold when 0 then  replace(cast(TmpAmount as varchar(10)),'.','') else replace('0.01','.','') end as Amount, 
+--ProviderCode, BeginDate, EndDate, IDType, RecordType, AccountType 
+--from 
+--#FinalBillingStmtSummary
 
 
 drop table #TCCAMSMGR_STMTS 
@@ -153,6 +180,9 @@ drop table #TCCAMSMGRDetail
 Drop Table #TCCAMSMGRIDPRE
 Drop Table #TCCAMSMGRIDPRE2
 drop table  #BillingStmtSummary
+drop table #FinalBillingStmtSummary
+drop table #TmpBillingStmtSummary
+drop table  #BillingDebits
 drop table #BillingStmtSummary1
 
 
