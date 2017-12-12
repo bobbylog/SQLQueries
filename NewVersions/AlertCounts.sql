@@ -8,7 +8,7 @@ from AdvPortalAlerts
 where TTerm='FA-17'
 GROUP BY CourseID , Coursename, FacultyID
 
-select CourseID, CourseName, FacultyName, NumAlertSubmitted, TutoringRecom from #AlertFacts
+select CourseID, FacultyName, NumAlertSubmitted, TutoringRecom from #AlertFacts
 order by FacultyName, CourseID, CourseName asc
 
 drop table #AlertFacts
