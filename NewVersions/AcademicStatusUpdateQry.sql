@@ -6,12 +6,12 @@ create table #TmpStatus(
 	Status varchar(25)
 )
 insert into #TmpStatus
-exec dbo.CTM_DetermineStudentProbationStatusByTermAll 'SP-17'
+exec dbo.CTM_DetermineStudentProbationStatusByTermAll 'FA-17'
 
 --select * from CAMS_StudentStatus_View
 --where AcademicStatusID >0
 
-select * from StatusCode
+--select * from StatusCode
 
 select distinct TP.* , 
 case 
@@ -23,10 +23,10 @@ from #TmpStatus TP
 
 select * from #TmpStatus1
 
-select distinct studentuid, AcademicStatusID from CAMS_StudentStatus_View
-where
-TermCalendarID=616
-order by StudentUID asc
+----select distinct studentuid, AcademicStatusID from CAMS_StudentStatus_View
+----where
+----TermCalendarID=616
+----order by StudentUID asc
 
 -- Probation
 --update StudentStatus 
