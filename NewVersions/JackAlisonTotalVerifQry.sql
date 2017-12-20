@@ -1,6 +1,6 @@
-drop table #JackData
+--drop table #JackData
 
-select * from FedDataForRecon_View
+--select * from FedDataForRecon_View
 
 select type, sum(NetAmount1)  as TotalAlison from FedDataForRecon_View
 group by type
@@ -21,10 +21,25 @@ FROM  dbo.tmpRptBillingBYOR AS tmpRptBillingBYOR INNER JOIN
                dbo.Student ON tmpRptBillingBYOR.OwnerUID = dbo.Student.StudentUID
 WHERE (tmpRptBillingBYOR.ReportKey =356078)
 
-select * from #JackData
+--select * from #JackData
 
-select TransDoc, Sum(showAmount) as TotalJAck from #JackData
+select 
+case 
+when TransDoc='DLPlus2' then 'DLPlus'
+when TransDoc='DLStafford2' then 'DLStafford'
+when TransDoc='DLUnsub2' then 'DLUnsub'
+else TransDoc
+end as TransDoc1
+, Sum(showAmount) as TotalJAck 
+into #JackData1
+from #JackData
 group By Transdoc
 
+select 
+TransDoc1
+, Sum(TotalJAck) as TotalJack
+from #JackData1
+group By Transdoc1
 
+drop table #JackData1
 drop table #JackData
