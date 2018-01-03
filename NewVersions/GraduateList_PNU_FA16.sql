@@ -10,7 +10,7 @@
 -- Practical Nursing Certificate Graduate
 
 Declare @cterm int
-set @cterm=614
+set @cterm=616
 
 Select Distinct A.StudentUID, A.GPAGroupID Into #GradeSummaryBYOR From SRAcademic A  
 Inner Join StudentStatus as C ON A.StudentUID = C.StudentUID AND A.TermCalendarID = C.TermCalendarID  

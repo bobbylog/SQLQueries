@@ -1,11 +1,11 @@
 USE [msdb]
 GO
 
-/****** Object:  Job [DetectWrongBNID]    Script Date: 9/29/2017 8:21:07 AM ******/
+/****** Object:  Job [DetectWrongBNID]    Script Date: 12/26/2017 11:44:18 AM ******/
 BEGIN TRANSACTION
 DECLARE @ReturnCode INT
 SELECT @ReturnCode = 0
-/****** Object:  JobCategory [[Uncategorized (Local)]]]    Script Date: 9/29/2017 8:21:07 AM ******/
+/****** Object:  JobCategory [[Uncategorized (Local)]]]    Script Date: 12/26/2017 11:44:18 AM ******/
 IF NOT EXISTS (SELECT name FROM msdb.dbo.syscategories WHERE name=N'[Uncategorized (Local)]' AND category_class=1)
 BEGIN
 EXEC @ReturnCode = msdb.dbo.sp_add_category @class=N'JOB', @type=N'LOCAL', @name=N'[Uncategorized (Local)]'
@@ -26,7 +26,7 @@ EXEC @ReturnCode =  msdb.dbo.sp_add_job @job_name=N'DetectWrongBNID',
 		@owner_login_name=N'TROCAIRE\EtienneS', 
 		@notify_email_operator_name=N'System Admin', @job_id = @jobId OUTPUT
 IF (@@ERROR <> 0 OR @ReturnCode <> 0) GOTO QuitWithRollback
-/****** Object:  Step [Processing]    Script Date: 9/29/2017 8:21:07 AM ******/
+/****** Object:  Step [Processing]    Script Date: 12/26/2017 11:44:18 AM ******/
 EXEC @ReturnCode = msdb.dbo.sp_add_jobstep @job_id=@jobId, @step_name=N'Processing', 
 		@step_id=1, 
 		@cmdexec_success_code=0, 
@@ -51,7 +51,7 @@ EXEC @ReturnCode = msdb.dbo.sp_add_jobstep @job_id=@jobId, @step_name=N'Processi
 --drop table #TransacFilesV3
 --drop table #NoSumTabForVerifTmp			
 --drop table #NoSumTabVerif				
-drop table #TransTbl		
+--drop table #TransTbl		
 
 IF OBJECT_ID(''tempdb..#DirectoryTree'') IS NOT NULL
       DROP TABLE #tmpDirectory1;
@@ -63,7 +63,7 @@ CREATE TABLE #tmpDirectory1 (
       ,isfile bit);
 
 INSERT #tmpDirectory1 (subdirectory,depth,isfile)
-EXEC master.sys.xp_dirtree ''D:\SFTP\barnes_noble\Imports\Archives\FA17\Raw\'',1,1;
+EXEC master.sys.xp_dirtree ''D:\SFTP\barnes_noble\Imports\Archives\SP18\Raw\'',1,1;
 
 
 
@@ -105,10 +105,10 @@ DECLARE db_cursor1 CURSOR FOR
 			WHILE @@FETCH_STATUS = 0   
 			BEGIN  
 			 
-			 set @gblcmd=''type "D:\SFTP\barnes_noble\Imports\Archives\FA17\Raw\'' + @name1+''" >> "D:\SFTP\barnes_noble\Imports\Archives\FA17\Raw\ProcessTransV3.csv"''
+			 set @gblcmd=''type "D:\SFTP\barnes_noble\Imports\Archives\SP18\Raw\'' + @name1+''" >> "D:\SFTP\barnes_noble\Imports\Archives\SP18\Raw\ProcessTransV3.csv"''
 			--print @gblcmd
 			
-			 EXEC  master..xp_cmdshell ''copy "D:\SFTP\barnes_noble\Imports\Archives\FA17\Raw\ProcessTransV3tpl.csv" "D:\SFTP\barnes_noble\Imports\Archives\FA17\Raw\ProcessTransV3.csv"'', no_output
+			 EXEC  master..xp_cmdshell ''copy "D:\SFTP\barnes_noble\Imports\Archives\SP18\Raw\ProcessTransV3tpl.csv" "D:\SFTP\barnes_noble\Imports\Archives\SP18\Raw\ProcessTransV3.csv"'', no_output
 		     EXEC  master..xp_cmdshell @gblcmd, no_output
 			 print @Cpass
 			 
@@ -118,7 +118,7 @@ DECLARE db_cursor1 CURSOR FOR
 					into #Transv3
 					from openrowset(''MSDASQL''
 					 ,''Driver={Microsoft Access Text Driver (*.txt, *.csv)}; 
-					 DefaultDir=D:\SFTP\barnes_noble\Imports\Archives\FA17\Raw\'' 
+					 DefaultDir=D:\SFTP\barnes_noble\Imports\Archives\SP18\Raw\'' 
 					 ,''select * from ProcessTransV3.csv'') T
 				
 				END
@@ -130,7 +130,7 @@ DECLARE db_cursor1 CURSOR FOR
 						select * 
 						from openrowset(''MSDASQL''
 						,''Driver={Microsoft Access Text Driver (*.txt, *.csv)}; 
-						 DefaultDir=D:\SFTP\barnes_noble\Imports\Archives\FA17\Raw\'' 
+						 DefaultDir=D:\SFTP\barnes_noble\Imports\Archives\SP18\Raw\'' 
 						,''select * from ProcessTransV3.csv'') T
 					
 					END
@@ -150,16 +150,19 @@ DECLARE db_cursor1 CURSOR FOR
 			into dbo.TransTbl
 			FROM #Transv3 vst
 
+			declare @nc int
 
-			select distinct Field3, Field4, CAMSOFficial from dbo.TransTbl where CAMSOFficial is null
+			set @nc=(select distinct count(Field3) from dbo.TransTbl where CAMSOFficial is null)
 
 -- Send an email
-EXEC msdb.dbo.sp_send_dbmail 
-@profile_name=''TROCMAIL'',
-@recipients = ''etiennes@trocaire.edu'', 
-@query = ''select distinct Field3, Field4, CAMSOFficial from CAMS_ENterprise.dbo.TransTbl where CAMSOFficial is null'',
-@subject = ''Students with Wrong IDs'' ,
-@body = ''List of Students with Wrong IDs: '' ;  
+
+if @nc >0
+	EXEC msdb.dbo.sp_send_dbmail 
+	@profile_name=''TROCMAIL'',
+	@recipients = ''etiennes@trocaire.edu;desbordesd@trocaire.edu;packardt@trocaire.edu'', 
+	@query = ''select distinct Field3, Field4, CAMSOFficial from CAMS_ENterprise.dbo.TransTbl where CAMSOFficial is null'',
+	@subject = ''Students with Wrong IDs'' ,
+	@body = ''List of Students with Wrong IDs: '' ;  
 
 
 drop table dbo.TransTbl
