@@ -2,10 +2,11 @@ select 'update' as action, portalHandle as username, dbo.getStudentIDFromUID(Stu
 from studentportal
 where dbo.getStudentIDFromUID(StudentUID) in
 (
-'A0000025953',
-'A0000028282',
-'A0000028542',
-'A0000006209'
-
-
+'A0000000351',
+'A0000013182',
+'A0000027435',
+'A0000028473',
+'A0000028747',
+'A0000028785',
+'C0000041505'
 )

@@ -15,10 +15,11 @@ FROM  dbo.SRAcademic AS SR1 LEFT OUTER JOIN
                dbo.StudentProgram AS SP1 ON SS1.StudentStatusID = SP1.StudentStatusID LEFT OUTER JOIN
                dbo.MajorMinor AS MM1 ON SP1.MajorProgramID = MM1.MajorMinorID
 WHERE 
-(TC1.TextTerm = 'Fa-17') 
-AND ((MM1.MajorMinorID = 124))
-AND ((SR1.Department= 'RT'))
-AND ((SR1.CourseID= 101))
+(TC1.TextTerm = 'SP-18') 
+AND ((MM1.MajorMinorID = 109))
+--AND ((SR1.Department= 'RT'))
+AND ((SR1.CourseID= 122))
+AND ((SR1.CourseType= 'I'))
 AND (NOT (GL1.DisplayText = 'Transfer')) 
 AND (NOT (ST1.LastName = 'Testperson'))
 

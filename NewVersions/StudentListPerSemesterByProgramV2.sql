@@ -1,7 +1,10 @@
+drop table #NewStud
+
 SELECT DISTINCT 
                TOP (100) PERCENT TC1.TextTerm AS Term, ST1.StudentUID, ST1.StudentID, LTRIM(RTRIM(ST1.LastName)) AS LastName, LTRIM(RTRIM(ST1.FirstName)) 
                AS FirstName, ST1.MiddleInitial, MM1.MajorMinorName AS DegreeProgram, LTRIM(RTRIM(ST1.LastName)) + SUBSTRING(LTRIM(RTRIM(ST1.FirstName)), 1, 1) 
                AS USERID, dbo.getStudentEmailAddressFromID(ST1.StudentID) as Email1,  dbo.isNewStudentByTerm(st1.StudentID,'sp-18') as NewS1 
+into #NewStud
 FROM  dbo.SRAcademic AS SR1 LEFT OUTER JOIN
                dbo.TermCalendar AS TC1 ON SR1.TermCalendarID = TC1.TermCalendarID LEFT OUTER JOIN
                dbo.Glossary AS GL1 ON SR1.CategoryID = GL1.UniqueId LEFT OUTER JOIN
@@ -12,7 +15,12 @@ FROM  dbo.SRAcademic AS SR1 LEFT OUTER JOIN
 WHERE (TC1.TextTerm = 'Sp-18') 
 --AND (NOT (GL1.DisplayText = 'Transfer')) 
 AND (NOT (ST1.LastName = 'Testperson'))
-and MM1.MajorMinorName like 'Nursing'
+--and MM1.MajorMinorName like 'Nursing'
 AND NOT SR1.grade='W'
 
 ORDER BY LastName, FirstName
+
+select * from #NewStud
+where NewS1='Yes'
+
+drop table #NewStud
