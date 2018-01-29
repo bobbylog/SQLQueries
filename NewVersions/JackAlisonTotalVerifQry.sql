@@ -19,7 +19,7 @@ FROM  dbo.tmpRptBillingBYOR AS tmpRptBillingBYOR INNER JOIN
                tmpRptBillingBYOR.BillingID = CAMS_RptBillingLedgerBYOR_View.BillingID AND 
                tmpRptBillingBYOR.BillingBatchID = CAMS_RptBillingLedgerBYOR_View.BillingBatchID LEFT OUTER JOIN
                dbo.Student ON tmpRptBillingBYOR.OwnerUID = dbo.Student.StudentUID
-WHERE (tmpRptBillingBYOR.ReportKey =356078)
+WHERE (tmpRptBillingBYOR.ReportKey =360929)
 
 --select * from #JackData
 
