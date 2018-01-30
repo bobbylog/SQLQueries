@@ -85,18 +85,15 @@ AND (NOT (ST1.LastName = 'Testperson'))
 ORDER BY LastName, FirstName
 
 
-select A.*,
-isnull([dbo].[getSumTrocaireEarnedCreditsAll] (A.StudentUID),0) as TrocCumEarnedCreditsFA17,
-dbo.getStudentTrocGPA (A.StudentUid) as CumGPAFA17
-
-,case when dbo.isStudentEnrolled(B.StudentUID,617) =0 then 'No' else 'Yes' end As EnrolledSP18
+select A.*
+,case when dbo.isStudentEnrolled(A.StudentUID,617) =0 then 'No' else 'Yes' end As EnrolledSP18
 ,B.AdvisorSP18
 ,B.DegreeProgram as DegreeProgramSP18
-,dbo.getStudentTrocGPA (B.StudentUid) as CumGPASP18
-,isnull([dbo].[getSumTrocaireEarnedCreditsAll] (B.StudentUID),0) as TrocCumEarnedCreditsSP18
+,dbo.getStudentTrocGPA (B.StudentUid) as CumGPA
+,isnull([dbo].[getSumTrocaireEarnedCreditsAll] (B.StudentUID),0) as TrocCumEarnedCredits
 
  from #TmpSP17List A
-inner join 
+left outer join 
 #TmpSP18List B ON A.StudentUID=B.StudentUID
 
 
