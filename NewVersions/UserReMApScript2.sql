@@ -1,4 +1,4 @@
-use XenApp65
+use Trocaire_Extra
 
 
 ALTER USER "TROCAIRE\accounting" WITH login = "TROCAIRE\accounting"

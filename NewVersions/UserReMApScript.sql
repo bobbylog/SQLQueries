@@ -1,4 +1,5 @@
-use XenApp65
+use CAMS_Enterprise
+
 ALTER USER sa WITH login = sa
 ALTER USER bagwelld WITH login = bagwelld
 ALTER USER BarbaraE WITH login = BarbaraE
